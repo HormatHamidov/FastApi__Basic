@@ -50,8 +50,24 @@ async def read_author_category_by_query(book_author: str, category: str):
             and book.get("category").casefold() == category.casefold()
         )
     ]
-    
-    
+
+
 @app.post("/books/create_book")
 async def create_book(new_book=Body()):
     BOOKS.append(new_book)
+
+
+@app.put("/books/book_update")
+async def update_book(update_book=Body()):
+    for i in range(len(BOOKS)):
+        if BOOKS[i].get("title") == update_book.get("title").casefold():
+            BOOKS[i] = update_book
+            return {"message": "Book updated successfully"}
+
+
+@app.delete("/books/delete_book/{book_title}")
+async def delete_book(book_title: str):
+    for i in range(len(BOOKS)):
+        if BOOKS[i].get("title").casefold() == book_title.casefold():
+            BOOKS.pop(i)
+            break
